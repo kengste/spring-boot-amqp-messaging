@@ -8,20 +8,13 @@ public final class UserDetails implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @JsonProperty("supplierId")
-    private String supplierId;
+    private final String supplierId;
+    private final String supplierName;
+    private final String supplierUrl;
 
-    @JsonProperty("supplierName")
-    private String supplierName;
-
-    @JsonProperty("supplierUrl")
-    private String supplierUrl;
-
-    // Default constructor is needed to de-serialize JSON
-    public UserDetails() {
-    }
-
-    public UserDetails(String supplierId, String supplierName,  String supplierUrl) {
+    public UserDetails(@JsonProperty("supplierId") String supplierId,
+                       @JsonProperty("supplierName") String supplierName,
+                       @JsonProperty("supplierUrl") String supplierUrl) {
         this.supplierId = supplierId;
         this.supplierName = supplierName;
         this.supplierUrl = supplierUrl;
@@ -31,29 +24,19 @@ public final class UserDetails implements Serializable {
         return supplierId;
     }
 
-    public void setSupplierId(String supplierId) {
-        this.supplierId = supplierId;
-    }
-
     public String getSupplierName() {
         return supplierName;
-    }
-
-    public void setSupplierName(String supplierName) {
-        this.supplierName = supplierName;
     }
 
     public String getSupplierUrl() {
         return supplierUrl;
     }
 
-    public void setSupplierUrl(String supplierUrl) {
-        this.supplierUrl = supplierUrl;
-    }
-
     @Override
     public String toString() {
-        return "CrawlSupplierData [supplierId=" + supplierId + ", supplierName=" + supplierName + ", supplierUrl=" + supplierUrl + "]";
+        return "CrawlSupplierData [supplierId=" +
+                supplierId + ", supplierName=" +
+                supplierName + ", supplierUrl=" + supplierUrl + "]";
     }
 
 }

@@ -1,6 +1,5 @@
 package com.kengste.rabbitmq;
 
-import com.kengste.rabbitmq.config.ApplicationConfigReader;
 import com.kengste.rabbitmq.dto.UserDetails;
 import com.kengste.rabbitmq.util.ApplicationConstant;
 import org.slf4j.Logger;
@@ -22,17 +21,7 @@ public class UserService {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     private final RabbitTemplate rabbitTemplate;
-    private ApplicationConfigReader applicationConfig;
     private MessageSender messageSender;
-
-    public ApplicationConfigReader getApplicationConfig() {
-        return applicationConfig;
-    }
-
-    @Autowired
-    public void setApplicationConfig(ApplicationConfigReader applicationConfig) {
-        this.applicationConfig = applicationConfig;
-    }
 
     @Autowired
     public UserService(final RabbitTemplate rabbitTemplate) {
@@ -52,8 +41,8 @@ public class UserService {
     @RequestMapping(path = "/add", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> sendMessage(@RequestBody UserDetails user) {
 
-        String exchange = getApplicationConfig().getApp1Exchange();
-        String routingKey = getApplicationConfig().getApp1RoutingKey();
+        String exchange = RabbitmqApplication.APP_EXCHANGE_1;
+        String routingKey = RabbitmqApplication.APP_ROUTING_KEY_1;
 
         /* Sending to Message Queue */
         try {

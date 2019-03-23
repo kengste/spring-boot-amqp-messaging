@@ -1,6 +1,5 @@
 package com.kengste.rabbitmq;
 
-import com.kengste.rabbitmq.config.ApplicationConfigReader;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
@@ -8,75 +7,57 @@ import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class RabbitmqApplication {
 
-	@Autowired
-	private ApplicationConfigReader applicationConfig;
-
-	public ApplicationConfigReader getApplicationConfig() {
-		return applicationConfig;
-	}
-
-	public void setApplicationConfig(ApplicationConfigReader applicationConfig) {
-		this.applicationConfig = applicationConfig;
-	}
+    public static final String APP_EXCHANGE_1 = "app1-exchange";
+    public static final String APP_QUEUE_1 = "app1-queue";
+    public static final String APP_ROUTING_KEY_1 = "app-routing-key-1";
+    public static final String APP_EXCHANGE_2 = "app2-exchange";
+    public static final String APP_QUEUE_2 = "app2-queue";
+    public static final String APP_ROUTING_KEY_2 = "app-routing-key-2";
 
 	public static void main(String[] args) {
 		SpringApplication.run(RabbitmqApplication.class, args);
 	}
 
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(RabbitmqApplication.class);
-	}
-
-	/* This bean is to read the properties file configs */
-	@Bean
-	public ApplicationConfigReader applicationConfig() {
-		return new ApplicationConfigReader();
-	}
-
 	/* Creating a bean for the Message queue Exchange */
 	@Bean
 	public TopicExchange getApp1Exchange() {
-		return new TopicExchange(getApplicationConfig().getApp1Exchange());
+		return new TopicExchange(APP_EXCHANGE_1);
 	}
 
 	/* Creating a bean for Message queue */
 	@Bean
 	public Queue getApp1Queue() {
-		return new Queue(getApplicationConfig().getApp1Queue());
+		return new Queue(APP_QUEUE_1);
 	}
-
-	/* Binding between exchange and queue using routing key */
-	@Bean
-	public Binding declareBindingApp1() {
-		return BindingBuilder.bind(getApp1Queue()).to(getApp1Exchange()).with(getApplicationConfig().getApp1RoutingKey());
-	}
-
 
 	/* Creating a bean for the Message queue Exchange */
 	@Bean
 	public TopicExchange getApp2Exchange() {
-		return new TopicExchange(getApplicationConfig().getApp2Exchange());
+		return new TopicExchange(APP_EXCHANGE_2);
 	}
 
 	/* Creating a bean for Message queue */
 	@Bean
 	public Queue getApp2Queue() {
-		return new Queue(getApplicationConfig().getApp2Queue());
+		return new Queue(APP_QUEUE_2);
 	}
 
-	/* Binding between exchange and queue using routing key */
+    /* Bindings between exchange and queue using routing key */
+    @Bean
+    public Binding declareBinding1() {
+        return BindingBuilder.bind(getApp1Queue()).to(getApp1Exchange()).with(APP_ROUTING_KEY_1);
+    }
+
 	@Bean
-	public Binding declareBindingApp2() {
-		return BindingBuilder.bind(getApp2Queue()).to(getApp2Exchange()).with(getApplicationConfig().getApp2RoutingKey());
+	public Binding declareBinding2() {
+		return BindingBuilder.bind(getApp2Queue()).to(getApp1Exchange()).with(APP_ROUTING_KEY_1);
 	}
 
 	/*
