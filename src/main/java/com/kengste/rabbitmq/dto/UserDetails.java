@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 
+// Data Transfer Object
 public final class UserDetails implements Serializable {
 
     private static final long serialVersionUID = 1L;

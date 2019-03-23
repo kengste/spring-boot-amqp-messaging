@@ -11,7 +11,6 @@ public class MessageSender {
     private static final Logger log = LoggerFactory.getLogger(MessageSender.class);
 
     public void sendMessage(RabbitTemplate rabbitTemplate, String exchange, String routingKey, Object data) {
-        System.out.println("routing keyyyyyy" + routingKey);
         log.info("Sending message to the queue using routingKey {}. Message= {}", routingKey, data);
         rabbitTemplate.convertAndSend(exchange, routingKey, data);
         log.info("The message has been sent to the queue.");
